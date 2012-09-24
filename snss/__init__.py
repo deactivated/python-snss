@@ -4,6 +4,7 @@ from construct import *
 __all__ = ["SNSSFile"]
 
 
+
 class Padded(Construct):
     def __init__(self, name, subcon, length):
         Construct.__init__(self, name)
@@ -19,6 +20,7 @@ def ChromeString(name, encoding=None, wide=False):
     """
     An encoded, aligned, Pascal-style string.
     """
+    # Round a positive l up to nearest multiple of four bytes
     align = lambda l: l + ((4 - (l & 3)) & 3)
 
     if wide:
@@ -121,11 +123,18 @@ class SNSSCommand(object):
         self.container = container
         self.command_id = container.cmd_id
 
+    def __contains__(self, k):
+        return k in self.container
+
     def __getitem__(self, k):
         return self.container.content[k]
 
     def __repr__(self):
-        return str(dict(self.container.content))
+        content = dict(self.container.content)
+        if 'content_state' in content:
+            content['content_state'] = '...'
+
+        return "<SNSSCommand(%d, %r)>" % (self.command_id, content)
 
     __getattr__ = __getitem__
 

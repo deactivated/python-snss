@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-setup(name='snss',
+setup(name='python-snss',
       version="0.1",
       author="Mike Spindel",
       author_email="mike@spindel.is",
